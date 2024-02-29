@@ -1,9 +1,6 @@
 services:
   database:
     image: 'postgres:16.2-alpine3.19'
-    environment:
-      POSTGRES_PASSWORD: 'local_password'
-      POSTGRES_USER: 'vinimachad'
-      POSTGRES_DB: 'tabnews-db'
+    env_file: '../.env.development'
     ports:
       - 5432:5432
