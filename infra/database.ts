@@ -1,6 +1,6 @@
-import { Client } from 'pg'
+import { Client, QueryConfig } from 'pg'
 
-async function query(query: string) {
+async function query(query: string | QueryConfig<any[]>) {
   const client = new Client({
     host: process.env.POSTGRES_HOST,
     port: Number(process.env.POSTGRES_PORT),
@@ -9,9 +9,13 @@ async function query(query: string) {
     user: process.env.POSTGRES_USER
   })
   await client.connect()
-  const result = await client.query(query)
-  await client.end()
-  return result
+  try {
+    return await client.query(query)
+  } catch (error) {
+    console.log('-> query error:', error)
+  } finally {
+    await client.end()
+  }
 }
 
 export default {
