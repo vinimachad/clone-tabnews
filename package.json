@@ -5,9 +5,12 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
+    "dev": "npm run service:up && next dev",
     "test": "jest",
     "test:watch": "jest --watch",
-    "dev": "next dev",
+    "service:up": "docker compose -f infra/compose.yaml up -d",
+    "service:stop": "docker compose -f infra/compose.yaml stop",
+    "service:down": "docker compose -f infra/compose.yaml down",
     "lint:check": "prettier --check .",
     "lint:fix": "prettier --write ."
   },
