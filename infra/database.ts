@@ -6,13 +6,16 @@ async function query(query: string | QueryConfig<any[]>) {
     port: Number(process.env.POSTGRES_PORT),
     password: process.env.POSTGRES_PASSWORD,
     database: process.env.POSTGRES_DB,
-    user: process.env.POSTGRES_USER
+    user: process.env.POSTGRES_USER,
+    ssl: getSSLValues()
   })
-  await client.connect()
+
   try {
+    await client.connect()
     return await client.query(query)
   } catch (error) {
-    console.log('-> query error:', error)
+    console.log(error)
+    throw error
   } finally {
     await client.end()
   }
@@ -20,4 +23,12 @@ async function query(query: string | QueryConfig<any[]>) {
 
 export default {
   query: query
+}
+
+function getSSLValues() {
+  if (process.env.POSTGRES_CA) {
+    return { ca: process.env.POSTGRES_CA }
+  }
+
+  return process.env.NODE_ENV === 'development' ? false : true
 }
